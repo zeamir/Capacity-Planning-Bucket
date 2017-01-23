@@ -1,0 +1,90 @@
+* { box-sizing: border-box;}
+body {padding: 10px;}
+
+/* DivTable.com */
+.divTable{
+	display: table;
+	width: 100%;
+}
+.divTableRow {
+	display: table-row;
+}
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+}
+.divTableCell, .divTableHead {
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+}
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+.divTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divTableBody {
+	display: table-row-group;
+}
+
+
+.bucket {
+	margin: 10px 10px 30px 10px;
+	height: 100px;
+	width: 70px;
+	position: relative;
+}
+
+.bucket__measurements {
+	height: 100%;
+	display: flex;
+	flex-direction: column-reverse;
+	justify-content: flex-end;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+.bucket__measurement {
+	flex: 0 0 0;
+}
+.done-work {
+	background-color: #09A582;
+}
+.remaining-work {
+	background-color: #5F9FCB;
+}
+.free-capacity {
+	background-color: transparent;
+}
+.over-capacity {
+	background-color: #FE4554;
+}
+
+.bucket__capacity {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-left: 2px solid #666;
+	border-right: 2px solid #666;
+}
+
+.bucket__feature-estimation {
+	position: absolute;
+	left: 0;
+	right: 0;
+	border: 1px dashed;
+}
+
+.bucket__bottom {
+	height: 3px;
+	border-left: 2px solid #666;
+	border-right: 2px solid #666;
+	border-bottom: 2px solid #666;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}

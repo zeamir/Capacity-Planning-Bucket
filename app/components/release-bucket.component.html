@@ -1,0 +1,67 @@
+<br>
+<button ng-click="$ctrl.runFreeCapacityExample()">Free Capacity Example</button>
+<button ng-click="$ctrl.runOverCapacityExample()">Over Capacity Example</button>
+<button ng-click="$ctrl.runOverFeatureEstimationExample()">Over Feature Estimation Example</button>
+<br>
+<br>
+<div class="divTable" style="width: 80%; border: 2px solid #000;">
+	<div class="divTableBody">
+		<div class="divTableRow">
+			<div class="divTableCell">Capacity (SP)</div>
+			<div class="divTableCell">Done (SP)</div>
+			<div class="divTableCell">Remaining (SP)</div>
+			<div class="divTableCell">Over (SP)</div>
+			<div class="divTableCell">Feature Estimation (SP)</div>
+		</div>
+		<div class="divTableRow">
+			<div class="divTableCell"><input type="text" ng-model="$ctrl.storyPointsCapacity"></div>
+			<div class="divTableCell"><input type="text" ng-model="$ctrl.doneStoryPoints"></div>
+			<div class="divTableCell"><input type="text" ng-model="$ctrl.remainingStoryPoints"></div>
+			<div class="divTableCell"><input type="text" ng-model="$ctrl.extraStoryPoints"></div>
+			<div class="divTableCell"><input type="text" ng-model="$ctrl.featureEstimationStoryPoints"></div>
+		</div>
+	</div>
+</div>
+
+<br>
+<group id="debugParams">
+	<!--<strong>storyPointsCapacity:</strong> {{$ctrl.storyPointsCapacity}}<br/>-->
+	<!--<strong>doneStoryPoints:</strong> {{$ctrl.doneStoryPoints}}<br/>-->
+	<!--<strong>remainingStoryPoints:</strong> {{$ctrl.remainingStoryPoints}}<br/>-->
+	<!--<strong>extraStoryPoints:</strong> {{$ctrl.extraStoryPoints}}<br/>-->
+
+	<!--<strong>storyPoints :</strong> {{$ctrl.getDoneStyle()}}<br/>-->
+	<!--<strong>remaining :</strong> {{$ctrl.getRemainingStyle()}}<br/>-->
+	<!--<strong>extraStoryPoints :</strong> {{$ctrl.getOverCapacityStyle()}}<br/>-->
+	<!--<strong>featureEstimationStoryPoints:</strong> {{$ctrl.getFeatureEstimationStyle()}}<br/>-->
+	<!--<strong>getBucketCapacityStyle:</strong> {{$ctrl.getBucketCapacityStyle()}}<br/>-->
+	<!--<strong>free capacity :</strong> {{$ctrl.getFreeCapacityStyle()}}<br/>-->
+</group>
+<br>
+<button ng-click="$ctrl.calculateBucketData()">Refresh Bucket</button>
+
+<br>
+<div class="bucket">
+
+	<!--dynamic styles-->
+	<div class="bucket__measurements">
+		<!--<div class="bucket__measurement done-work" ng-style="{'flex-basis': $ctrl.getDoneStyle()}"></div>-->
+		<div class="bucket__measurement done-work" ng-style="$ctrl.getDoneStyle()"></div>
+		<div class="bucket__measurement remaining-work" ng-style="$ctrl.getRemainingStyle()"></div>
+		<div class="bucket__measurement free-capacity" ng-style="$ctrl.getFreeCapacityStyle()"></div>
+		<div class="bucket__measurement over-capacity" ng-style="$ctrl.getOverCapacityStyle()"></div>
+	</div>
+
+	<!--  represents if the bucket border will reach the top. if there is no over-capacity this should be zero -->
+	<div class="bucket__capacity" ng-style="$ctrl.getBucketCapacityStyle()">
+		<!--  feature-estimation: when 100% it means the dashed line will be at the top
+			   when 0% will be at the bottom (when the bars start)-->
+		<div class="bucket__feature-estimation" ng-style="$ctrl.getFeatureEstimationStyle()"></div>
+	</div>
+	<div class="bucket__bottom"></div>
+
+</div>
+
+
+
+

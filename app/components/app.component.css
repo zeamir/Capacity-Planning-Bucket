@@ -1,0 +1,17 @@
+my-app {
+	display: block;
+}
+
+my-app button {
+	color: green;
+}
+
+my-app .app-menu {
+	background-color: black;
+	color: white;
+	padding: 0.5em;
+}
+
+my-app .app-menu .logo {
+	font-size: 1.25em;
+}
