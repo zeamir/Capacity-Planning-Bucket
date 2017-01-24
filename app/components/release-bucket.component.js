@@ -69,6 +69,15 @@ var ReleaseBucketComponent = (function (_super) {
         this.featureEstimationStoryPoints = 80;
         this.calculateBucketData();
     };
+    ReleaseBucketComponent.prototype.runFreeCapacityWithOverFeatureEstimationExample = function () {
+        this.clearParams();
+        this.storyPointsCapacity = 100;
+        this.doneStoryPoints = 20;
+        this.remainingStoryPoints = 60;
+        this.extraStoryPoints = 0;
+        this.featureEstimationStoryPoints = 120;
+        this.calculateBucketData();
+    };
     ReleaseBucketComponent.prototype.runOverCapacityExample = function () {
         this.clearParams();
         this.storyPointsCapacity = 100;
@@ -78,13 +87,13 @@ var ReleaseBucketComponent = (function (_super) {
         this.featureEstimationStoryPoints = 80;
         this.calculateBucketData();
     };
-    ReleaseBucketComponent.prototype.runOverFeatureEstimationExample = function () {
+    ReleaseBucketComponent.prototype.runOverCapacityWithOverFeatureEstimationExample = function () {
         this.clearParams();
         this.storyPointsCapacity = 100;
-        this.doneStoryPoints = 40;
-        this.remainingStoryPoints = 50;
-        this.extraStoryPoints = 0;
-        this.featureEstimationStoryPoints = 150;
+        this.doneStoryPoints = 20;
+        this.remainingStoryPoints = 80;
+        this.extraStoryPoints = 100;
+        this.featureEstimationStoryPoints = 120;
         this.calculateBucketData();
     };
     ReleaseBucketComponent.prototype.calculateBucketData = function () {
@@ -114,13 +123,26 @@ var ReleaseBucketComponent = (function (_super) {
         console.log('adjustedPercentage = ' + adjustedPercentage);
         if (adjustedPercentage > 100) {
             adjustedPercentage = 100;
-            borderColor = 'red';
+            if (data.extraWorkPercentage === 0) {
+                borderColor = 'red';
+            }
+            else {
+                borderColor = 'white';
+            }
         }
         else if (data.extraWorkPercentage > 0 || ((data.doneWorkPercentage + data.remainingWorkPercentage) > adjustedPercentage)) {
             // should be white dashed line if the line is on top other colors
             borderColor = 'white';
         }
         return { bottom: adjustedPercentage + '%', 'border-color': borderColor };
+    };
+    ReleaseBucketComponent.prototype.getOverFeatureEstimationSvgStyle = function () {
+        if (this.bucketPercentageData.featureEstimationPercentage > 100) {
+            return {};
+        }
+        else {
+            return { display: 'none' };
+        }
     };
     ReleaseBucketComponent.prototype.getCircleRadiusStyle = function () {
         return { width: this.circleRadius + 'px', height: this.circleRadius + 'px' };
