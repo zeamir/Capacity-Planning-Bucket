@@ -20,11 +20,27 @@ class ReleaseWorkCalculator {
 
 	constructor(storyPointsCapacity: number, doneStoryPoints: number, remainingStoryPoints: number | undefined, extraStoryPoints: number | undefined, featureEstimationStoryPoints: number) {
 
-		this.storyPointsCapacity = storyPointsCapacity;
-		this.doneStoryPoints = doneStoryPoints;
-		this.remainingStoryPoints = remainingStoryPoints | 0;
-		this.extraStoryPoints = extraStoryPoints | 0;
-		this.featureEstimationStoryPoints = featureEstimationStoryPoints;
+		this.storyPointsCapacity = Number(storyPointsCapacity);
+		this.doneStoryPoints =  Number(doneStoryPoints);
+		this.remainingStoryPoints =  Number(remainingStoryPoints) | 0;
+		this.extraStoryPoints =  Number(extraStoryPoints) | 0;
+		this.featureEstimationStoryPoints =  Number(featureEstimationStoryPoints);
+
+		if (this.storyPointsCapacity > 0 && (this.storyPointsCapacity < this.doneStoryPoints + this.remainingStoryPoints)) {
+			throw 'Story Points Capacity cannot be less then done + remaining';
+		}
+		if (this.extraStoryPoints > 0 &&
+			(this.doneStoryPoints + this.remainingStoryPoints != this.storyPointsCapacity)) {
+			// make sure capacity = done + remaining + extra
+			throw 'when there extra capacity, done + remaining but be equal to bucket capacity'
+		}
+
+		if (this.extraStoryPoints > 0 &&
+				(this.storyPointsCapacity != this.doneStoryPoints + this.remainingStoryPoints + this.extraStoryPoints)) {
+			// make sure capacity = done + remaining + extra
+			//throw 'when extra capacity is given, bucket capacity must be equal to done + remaining + extra'
+
+		}
 	}
 
 	getBucketPercentageData(): BucketChartPercentageData {
@@ -37,14 +53,27 @@ class ReleaseWorkCalculator {
 
 		let totalStoryPointsScale;
 		let freeStoryPoints;
-		if (this.storyPointsCapacity> 0) {
+		if (this.storyPointsCapacity > 0) {
 			totalStoryPointsScale = this.storyPointsCapacity;
+
 			freeStoryPoints = this.storyPointsCapacity - this.doneStoryPoints - this.remainingStoryPoints;
+
+			// feature estimation is determined according to the bucket capacity without taking into account the over capacity
+			featureEstimationPercentage = 100 * this.featureEstimationStoryPoints / this.storyPointsCapacity;
 		} else {
 			// since bucket capacity is zero, then we are treating the bucket as full, without any over capacity.
 			// this is because over capacity is meaningless without first specifying the bucket capacity.
 			totalStoryPointsScale = this.doneStoryPoints + this.remainingStoryPoints;
+
 			freeStoryPoints = 0;
+
+			if (this.featureEstimationStoryPoints > (this.doneStoryPoints + this.remainingStoryPoints)) {
+				// feature estimation should be set to 100% since there is no meaning
+				featureEstimationPercentage = 100;
+			} else {
+				featureEstimationPercentage = 100 * this.featureEstimationStoryPoints / (this.doneStoryPoints + this.remainingStoryPoints)
+			}
+
 			this.extraStoryPoints = 0;
 		}
 		if (this.extraStoryPoints > 0) {
@@ -58,8 +87,6 @@ class ReleaseWorkCalculator {
 		extraWorkPercentage = 100 * this.extraStoryPoints / totalStoryPointsScale;
 		freeBucketPercentage = 100 * (freeStoryPoints) / totalStoryPointsScale;
 
-		// feature estimation is determined according to the bucket capacity without taking into account the over capacity
-		featureEstimationPercentage = 100 * this.featureEstimationStoryPoints / this.storyPointsCapacity;
 
 		return {
 			bucketCapacity: bucketCapacity,
@@ -108,6 +135,19 @@ export class ReleaseBucketComponent extends ComponentBase {
 		this.remainingStoryPoints = 20;
 		this.extraStoryPoints = 0;
 		this.featureEstimationStoryPoints = 80;
+
+		this.calculateBucketData();
+	}
+
+	runZeroCapacityExample() {
+
+		this.clearParams();
+
+		this.storyPointsCapacity = 0;
+		this.doneStoryPoints = 40;
+		this.remainingStoryPoints = 20;
+		this.extraStoryPoints = 0;
+		this.featureEstimationStoryPoints = 50;
 
 		this.calculateBucketData();
 	}
@@ -176,14 +216,19 @@ export class ReleaseBucketComponent extends ComponentBase {
 
 	getBucketCapacityStyle() {
 		// return {top: this.bucketPercentageData.extraWorkPercentage + '%', 'border-style': this.getBorderStyle()};
-		return {top: this.bucketPercentageData.extraWorkPercentage + '%'};
+		let borderStyle = this.getBorderStyle();
+		return {
+			top: this.bucketPercentageData.extraWorkPercentage + '%',
+			'border-left-style': borderStyle,
+			'border-right-style': borderStyle
+		};
 	}
 
 	getFeatureEstimationStyle() {
 		let borderColor = '#666'; // dark line
 		let data = this.bucketPercentageData;
 		let adjustedPercentage: number = data.featureEstimationPercentage;
-		console.log('adjustedPercentage = ' + adjustedPercentage);
+		//console.log('adjustedPercentage = ' + adjustedPercentage);
 		if (adjustedPercentage > 100) {
 			adjustedPercentage = 100;
 			if (data.extraWorkPercentage === 0) {
@@ -208,13 +253,19 @@ export class ReleaseBucketComponent extends ComponentBase {
 	}
 
 	getBucketBottomStyle() {
-		return {'border-style': this.getBorderStyle()};
+
+		let borderStyle = this.getBorderStyle();
+		return {
+			'border-left-style': borderStyle,
+			'border-right-style': borderStyle,
+			'border-bottom-style': borderStyle
+		};
 	}
 
 	private getBorderStyle(): string {
 		// where there is not capacity at all, border should be dashed
 		let ret = 'solid';
-		if (this.bucketPercentageData.bucketCapacity = 0) {
+		if (this.bucketPercentageData.bucketCapacity === 0) {
 			ret = 'dashed'
 		}
 		return ret;

@@ -3,6 +3,7 @@
 <button ng-click="$ctrl.runFreeCapacityWithOverFeatureEstimationExample()">Free Capacity & Over Estimation</button>
 <button ng-click="$ctrl.runOverCapacityExample()">Over Capacity</button>
 <button ng-click="$ctrl.runOverCapacityWithOverFeatureEstimationExample()">Over Capacity & Over Estimation</button>
+<button ng-click="$ctrl.runZeroCapacityExample()">Zero Capacity</button>
 <br>
 <br>
 <div class="divTable" style="width: 80%; border: 2px solid #000;">
@@ -59,7 +60,7 @@
 		<div class="bucket__feature-estimation" ng-style="$ctrl.getFeatureEstimationStyle()"></div>
 		<div class="bucket__svg_icon" ng-style="$ctrl.getOverFeatureEstimationSvgStyle()"></div>
 	</div>
-	<div class="bucket__bottom"></div>
+	<div class="bucket__bottom" ng-style="$ctrl.getBucketBottomStyle()"></div>
 
 	<!--<svg alm-icon name='settings' class="bucket__svg_icon" ng-style="$ctrl.getFeatureEstimationStyle()"></svg>-->
 
