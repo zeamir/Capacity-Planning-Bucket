@@ -271,14 +271,6 @@ export class ReleaseBucketComponent extends ComponentBase {
 		return ret;
 	}
 
-	getCircleRadiusStyle() {
-		return {width: this.circleRadius + 'px', height: this.circleRadius + 'px'};
-	}
-
-	getCircleRadiusOnly() {
-		return this.circleRadius + 'px';
-	}
-
 	private clearParams() {
 		this.storyPointsCapacity = 0;
 		this.doneStoryPoints = 0;
