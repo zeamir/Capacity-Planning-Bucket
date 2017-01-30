@@ -21,10 +21,10 @@ class ReleaseWorkCalculator {
 	constructor(storyPointsCapacity: number, doneStoryPoints: number, remainingStoryPoints: number | undefined, extraStoryPoints: number | undefined, featureEstimationStoryPoints: number) {
 
 		this.storyPointsCapacity = Number(storyPointsCapacity);
-		this.doneStoryPoints =  Number(doneStoryPoints);
-		this.remainingStoryPoints =  Number(remainingStoryPoints) | 0;
-		this.extraStoryPoints =  Number(extraStoryPoints) | 0;
-		this.featureEstimationStoryPoints =  Number(featureEstimationStoryPoints);
+		this.doneStoryPoints = Number(doneStoryPoints);
+		this.remainingStoryPoints = Number(remainingStoryPoints) | 0;
+		this.extraStoryPoints = Number(extraStoryPoints) | 0;
+		this.featureEstimationStoryPoints = Number(featureEstimationStoryPoints);
 
 		if (this.storyPointsCapacity > 0 && (this.storyPointsCapacity < this.doneStoryPoints + this.remainingStoryPoints)) {
 			throw 'Story Points Capacity cannot be less then done + remaining';
@@ -36,7 +36,7 @@ class ReleaseWorkCalculator {
 		}
 
 		if (this.extraStoryPoints > 0 &&
-				(this.storyPointsCapacity != this.doneStoryPoints + this.remainingStoryPoints + this.extraStoryPoints)) {
+			(this.storyPointsCapacity != this.doneStoryPoints + this.remainingStoryPoints + this.extraStoryPoints)) {
 			// make sure capacity = done + remaining + extra
 			//throw 'when extra capacity is given, bucket capacity must be equal to done + remaining + extra'
 
@@ -80,12 +80,20 @@ class ReleaseWorkCalculator {
 			// the bucket should be shortened. meaning the entire 100% is not the capacity + extra points
 			totalStoryPointsScale = totalStoryPointsScale + this.extraStoryPoints;
 		}
-		bucketCapacity = 100 * this.storyPointsCapacity / totalStoryPointsScale;
 
-		doneWorkPercentage = 100 * this.doneStoryPoints / totalStoryPointsScale;
-		remainingWorkPercentage = 100 * this.remainingStoryPoints / totalStoryPointsScale;
-		extraWorkPercentage = 100 * this.extraStoryPoints / totalStoryPointsScale;
-		freeBucketPercentage = 100 * (freeStoryPoints) / totalStoryPointsScale;
+		if (totalStoryPointsScale) {
+			bucketCapacity = 100 * this.storyPointsCapacity / totalStoryPointsScale;
+			doneWorkPercentage = 100 * this.doneStoryPoints / totalStoryPointsScale;
+			remainingWorkPercentage = 100 * this.remainingStoryPoints / totalStoryPointsScale;
+			extraWorkPercentage = 100 * this.extraStoryPoints / totalStoryPointsScale;
+			freeBucketPercentage = 100 * (freeStoryPoints) / totalStoryPointsScale;
+		} else {
+			bucketCapacity = 0;
+			doneWorkPercentage = 0;
+			remainingWorkPercentage = 0;
+			extraWorkPercentage = 0;
+			freeBucketPercentage = 0;
+		}
 
 
 		return {
@@ -215,7 +223,6 @@ export class ReleaseBucketComponent extends ComponentBase {
 	}
 
 	getBucketCapacityStyle() {
-		// return {top: this.bucketPercentageData.extraWorkPercentage + '%', 'border-style': this.getBorderStyle()};
 		let borderStyle = this.getBorderStyle();
 		return {
 			top: this.bucketPercentageData.extraWorkPercentage + '%',
